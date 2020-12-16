@@ -1,0 +1,6 @@
+# IDEA Specific
+/.idea
+*.iml
+
+# Prevent Maven Leakage
+/target
