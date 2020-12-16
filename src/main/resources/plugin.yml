@@ -3,14 +3,27 @@ version: 1.0
 main: net.laboulangerie.townybanners.TownyBanners
 author: PainOchoco
 api-version: 1.16
+depend: [Towny]
+prefix: TownyBanners
 
 commands:
   tbanner:
-    description: "big weird stuff"
-    usage: /<command>
+    description: Set a banner to your town!
+    usage: "/<command>"
   nbanner:
-    description: "big weird stuff"
-    usage: /<command>
+    description: Set a banner to your nation!
+    usage: "/<command>"
+  townybanners:
+    description: Reload the Towny Banners config.
+    usage: "/<command> <reload>"
 
-depend:
-  - Towny
+permissions:
+  townybanners.town:
+    description: User is able to set a banner to his town.
+    default: op
+  townybanners.nation:
+    description: User is able to set a banner to his nation.
+    default: op
+  townyflight.reload:
+    description: User is able to reload the config.
+    default: op

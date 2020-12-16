@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class BannerAdvancement {
 
-    public String getJsonAdvancement(String name, ItemStack banner, String color) {
+    public String getJsonAdvancement(String enteringMsg, ItemStack banner, String color) {
         JsonObject advancementJson = new JsonObject();
 
         JsonObject bannerJson = new JsonObject();
@@ -21,7 +21,7 @@ public class BannerAdvancement {
         }
 
         JsonObject titleJson = new JsonObject();
-        titleJson.addProperty("text", "Entering " + name);
+        titleJson.addProperty("text", enteringMsg);
         titleJson.addProperty("color", color);
 
         JsonObject displayJson = new JsonObject();

@@ -16,24 +16,32 @@ import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class BannersEvents implements Listener {
+    private TownyBanners townyBanners;
+
+    public BannersEvents(TownyBanners townyBanners) {
+        this.townyBanners = townyBanners;
+    }
 
     @EventHandler
     public void onTownEntering(PlayerEnterTownEvent event) throws InterruptedException, NotRegisteredException {
-        Player player = event.getPlayer();
-        Town town = event.getEnteredtown();
+        if (townyBanners.getConfig().getBoolean("advancementPopUp")) {
 
-        TownyBanners plugin = (TownyBanners) Bukkit.getPluginManager().getPlugin("TownyBanners");
+            Player player = event.getPlayer();
+            Town town = event.getEnteredtown();
 
-        if (town.hasMeta("banner")) {
-        grantAdvancement(player, "towny_banners_town_" + town.getName().toLowerCase());
-        revokeAdvancement(player, plugin, "towny_banners_town_" + town.getName().toLowerCase());
-        }
+            TownyBanners plugin = (TownyBanners) Bukkit.getPluginManager().getPlugin("TownyBanners");
 
-        if (town.hasNation()) {
-            if (town.getNation().hasMeta("banner")) {
-                Nation nation = town.getNation();
-                grantAdvancement(player, "towny_banners_nation_" + nation.getName().toLowerCase());
-                revokeAdvancement(player, plugin, "towny_banners_nation_" + nation.getName().toLowerCase());
+            if (town.hasMeta("banner")) {
+                grantAdvancement(player, "towny_banners_town_" + town.getName().toLowerCase());
+                revokeAdvancement(player, plugin, "towny_banners_town_" + town.getName().toLowerCase());
+            }
+
+            if (town.hasNation()) {
+                if (town.getNation().hasMeta("banner")) {
+                    Nation nation = town.getNation();
+                    grantAdvancement(player, "towny_banners_nation_" + nation.getName().toLowerCase());
+                    revokeAdvancement(player, plugin, "towny_banners_nation_" + nation.getName().toLowerCase());
+                }
             }
         }
     }

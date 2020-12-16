@@ -1,0 +1,32 @@
+# TownyBanners by PainOchoco
+# Version: 1.0
+
+# whether or not display an advancement popup with the town and nation banners
+# when the player enter a town. (There is no other way to display the town/nation banner)
+advancementPopUp: true
+
+messages:
+  command:
+    consoleTryCommand: "Tu peux faire ça seulement en jeu !"
+    # +townName represents the town name
+    townBannerSaved: "Cette bannière a bien été enregistrée pour le village +townName !"
+    playerDoesNotBelongToATown: "Vous devez être dans un village pour pouvoir définir la bannière de celui-ci."
+    playerHasNoBannerInHand: "Veuillez avoir une bannière dans la main principale pour l'enregistrer."
+    # +nationName represents the town name
+    nationBannerSaved: "Cette bannière a bien été enregistrée pour la nation +nationName !"
+    townDoesNotBelongToANation: "Votre village doit être dans une nation pour pouvoir définir la bannière de celle-ci."
+
+  entering:
+    # +townName represents the town name
+    town: "➜ +townName"
+    # colors options: black, dark_blue, dark_green,
+    # dark_aqua, dark_red, dark_purple, gold,
+    # gray, dark_gray, blue, green, aqua,
+    # red, light_purple, yellow, white.
+    townColor: "yellow"
+    # +nationName represents the town name
+    nation: "➽ +nationName"
+    # see colors options
+    nationColor: "gold"
+
+
