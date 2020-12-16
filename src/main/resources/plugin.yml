@@ -1,0 +1,16 @@
+name: TownyBanners
+version: 1.0
+main: net.laboulangerie.townybanners.TownyBanners
+author: PainOchoco
+api-version: 1.16
+
+commands:
+  tbanner:
+    description: "big weird stuff"
+    usage: /<command>
+  nbanner:
+    description: "big weird stuff"
+    usage: /<command>
+
+depend:
+  - Towny
