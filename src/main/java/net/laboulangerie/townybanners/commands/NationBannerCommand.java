@@ -20,11 +20,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
-public class NationBannersCommand implements CommandExecutor {
+public class NationBannerCommand implements CommandExecutor {
 
     private TownyBanners townyBanners;
 
-    public NationBannersCommand(TownyBanners townyBanners) {
+    public NationBannerCommand(TownyBanners townyBanners) {
         this.townyBanners = townyBanners;
     }
 
