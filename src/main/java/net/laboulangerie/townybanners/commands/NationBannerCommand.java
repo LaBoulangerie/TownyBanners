@@ -1,6 +1,5 @@
 package net.laboulangerie.townybanners.commands;
 
-import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.TownyMessaging;
 import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
 import com.palmergames.bukkit.towny.object.Nation;
@@ -8,7 +7,9 @@ import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.metadata.StringDataField;
 import net.laboulangerie.townybanners.TownyBanners;
+import net.laboulangerie.townybanners.advancement.Keys;
 import net.laboulangerie.townybanners.utils.ItemUtils;
+import net.laboulangerie.townybanners.utils.TownyBannersConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Tag;
@@ -23,16 +24,18 @@ import org.jetbrains.annotations.NotNull;
 public class NationBannerCommand implements CommandExecutor {
 
     private TownyBanners townyBanners;
+    private TownyBannersConfig config;
 
     public NationBannerCommand(TownyBanners townyBanners) {
         this.townyBanners = townyBanners;
+        this.config = townyBanners.getTownyBannerConfig();
     }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
         if (!(sender instanceof Player)) {
-            TownyMessaging.sendErrorMsg(sender, townyBanners.getConfig().getString("messages.command.consoleTryCommand"));
+            TownyMessaging.sendErrorMsg(sender, this.config.getConsoleTryCommand());
             return false;
         }
 
@@ -52,28 +55,30 @@ public class NationBannerCommand implements CommandExecutor {
                         Town town = resident.getTown();
                         if (town.hasNation()) {
                             Nation nation = town.getNation();
+                            String nationName = nation.getName().toLowerCase();
                             nation.addMetaData(bannerField);
-
-                            if (Bukkit.getAdvancement(NamespacedKey.minecraft("towny_banners_nation_" + nation.getName().toLowerCase())) != null) {
-                                Bukkit.getUnsafe().removeAdvancement(NamespacedKey.minecraft("towny_banners_nation_" + nation.getName().toLowerCase()));
+                            NamespacedKey nationKey = Keys.NATION.getKey(nationName);
+                            if (Bukkit.getAdvancement(nationKey) != null) {
+                                Bukkit.getUnsafe().removeAdvancement(nationKey);
                                 Bukkit.getServer().reloadData();
                             }
 
-                            Bukkit.getUnsafe().loadAdvancement(NamespacedKey.minecraft("towny_banners_nation_" + nation.getName().toLowerCase()), this.townyBanners.getBannerAdvancement().getJsonAdvancement(nation.getName(), banner, "gold"));
-                            TownyMessaging.sendMsg(player, townyBanners.getConfig().getString("messages.command.nationBannerSaved").replace("+nationName", nation.getName()));
+                            Bukkit.getUnsafe().loadAdvancement(nationKey,
+                                    this.townyBanners.getBannerAdvancement().getJsonAdvancement(nation.getName(), banner, "gold"));
+                            TownyMessaging.sendMsg(player, this.config.getNationBannerSaved(nation.getName()));
 
                         } else {
-                            TownyMessaging.sendErrorMsg(player, townyBanners.getConfig().getString("messages.command.townDoesNotBelongToANation"));
+                            TownyMessaging.sendErrorMsg(player, this.config.getTownDoesNotBelongToANation());
                         }
                     } else {
-                        TownyMessaging.sendErrorMsg(player, townyBanners.getConfig().getString("messages.command.playerDoesNotBelongToATown"));
+                        TownyMessaging.sendErrorMsg(player, this.config.getPlayerDoesNotBelongToATown());
                     }
                 } catch (NotRegisteredException e) {
                     e.printStackTrace();
                 }
 
             } else {
-                TownyMessaging.sendErrorMsg(player, townyBanners.getConfig().getString("messages.command.playerHasNoBannerInHand"));
+                TownyMessaging.sendErrorMsg(player, this.config.getPlayerHasNoBannerInHand());
             }
         }
         return true;

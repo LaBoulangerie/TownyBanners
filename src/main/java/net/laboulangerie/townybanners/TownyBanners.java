@@ -4,25 +4,14 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.db.TownyDataSource;
-import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
-import com.palmergames.bukkit.towny.object.Nation;
-import com.palmergames.bukkit.towny.object.Town;
-import com.palmergames.bukkit.towny.object.metadata.StringDataField;
-import net.laboulangerie.townybanners.advancement.BannerAdvancementType;
 import net.laboulangerie.townybanners.advancement.BannerAdvancement;
 import net.laboulangerie.townybanners.commands.NationBannerCommand;
 import net.laboulangerie.townybanners.commands.TownBannerCommand;
 import net.laboulangerie.townybanners.commands.TownyBannersCommand;
 import net.laboulangerie.townybanners.listeners.BannersListener;
-import net.laboulangerie.townybanners.utils.ItemUtils;
 import net.laboulangerie.townybanners.utils.TownyBannersConfig;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.NamespacedKey;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.Collection;
 
 public class TownyBanners extends JavaPlugin {
 
@@ -55,39 +44,11 @@ public class TownyBanners extends JavaPlugin {
         this.getCommand("townybanners").setExecutor(new TownyBannersCommand(this));
 
 
-        getServer().getPluginManager().registerEvents(new BannersListener(this), this);
-        getServer().getConsoleSender().sendMessage(BANNER_TAG + "Ready!");
+        this.getServer().getPluginManager().registerEvents(new BannersListener(this), this);
 
-        Collection<Town> towns = this.townyDataSource.getTowns();
-        if (this.config.isPoppingOut()) {
+        this.bannerAdvancement.registerAdvancements();
+        this.getServer().getConsoleSender().sendMessage(BANNER_TAG + "Ready!");
 
-            for (Town town : towns) {
-
-                if (town.hasMeta("banner")) {
-                    StringDataField townBannerField = (StringDataField) town.getMetadata("banner");
-                    ItemStack townBanner = ItemUtils.stringToItem(townBannerField.getValue());
-
-                    String townName = town.getName();
-                    this.bannerAdvancement.loadAdvancement(BannerAdvancementType.TOWN, townBanner, townName);
-                }
-
-                if (town.hasNation()) {
-                    try {
-                        Nation nation = town.getNation();
-                        if (nation.hasMeta("banner")) {
-
-                            StringDataField nationBannerField = (StringDataField) nation.getMetadata("banner");
-                            ItemStack nationBanner = ItemUtils.stringToItem(nationBannerField.getValue());
-
-                            String nationName = nation.getName();
-                            this.bannerAdvancement.loadAdvancement(BannerAdvancementType.TOWN, nationBanner, nationName);
-                        }
-                    } catch (NotRegisteredException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
     }
 
     @Override
@@ -95,7 +56,6 @@ public class TownyBanners extends JavaPlugin {
         getServer().getConsoleSender().sendMessage(BANNER_TAG + "Bye!");
 
     }
-
 
     public Gson getGson() {
         return gson;
@@ -115,5 +75,10 @@ public class TownyBanners extends JavaPlugin {
 
     public TownyBannersConfig getTownyBannerConfig() {
         return this.config;
+    }
+
+    public void reloadTownyBannerConfig() {
+        this.reloadConfig();
+        this.config = new TownyBannersConfig(this);
     }
 }

@@ -1,14 +1,20 @@
 package net.laboulangerie.townybanners.advancement;
 
 import com.google.gson.JsonObject;
+import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
+import com.palmergames.bukkit.towny.object.Nation;
+import com.palmergames.bukkit.towny.object.Town;
+import com.palmergames.bukkit.towny.object.metadata.StringDataField;
 import net.laboulangerie.townybanners.TownyBanners;
+import net.laboulangerie.townybanners.utils.ItemUtils;
 import net.laboulangerie.townybanners.utils.TownyBannersConfig;
 import net.minecraft.server.v1_16_R3.NBTTagCompound;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.NamespacedKey;
 import org.bukkit.craftbukkit.v1_16_R3.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.Collection;
 
 public class BannerAdvancement {
 
@@ -57,17 +63,50 @@ public class BannerAdvancement {
         return this.townyBanners.getGson().toJson(advancementJson);
     }
 
-    public void loadAdvancement(BannerAdvancementType type, ItemStack banner, String name) {
+    public void loadAdvancement(Keys type, ItemStack banner, String name) {
         String lowerCase = name.toLowerCase();
         try {
-            Bukkit.getUnsafe().removeAdvancement(NamespacedKey.minecraft(type.getKey(lowerCase)));
+            Bukkit.getUnsafe().removeAdvancement(type.getKey(lowerCase));
             Bukkit.getServer().reloadData();
-            Bukkit.getUnsafe().loadAdvancement(NamespacedKey.minecraft(type.getKey(lowerCase)),
+            Bukkit.getUnsafe().loadAdvancement(type.getKey(lowerCase),
                     this.getJsonAdvancement(this.config.enteringNation(name),
                             banner, this.config.getNationColor()));
             this.townyBanners.getServer().getConsoleSender().sendMessage(TownyBanners.BANNER_TAG + ChatColor.GREEN + "Advancement " + type.getKey(name) + " saved");
         } catch (IllegalArgumentException e) {
             this.townyBanners.getServer().getConsoleSender().sendMessage(TownyBanners.BANNER_TAG + ChatColor.DARK_RED + "Error while saving, Advancement " + type.getKey(name) + " seems to already exist");
+        }
+    }
+
+    public void registerAdvancements() {
+        Collection<Town> towns = this.townyBanners.getTownyDataSource().getTowns();
+        if (this.config.isPoppingOut()) {
+
+            for (Town town : towns) {
+
+                if (town.hasMeta("banner")) {
+                    StringDataField townBannerField = (StringDataField) town.getMetadata("banner");
+                    ItemStack townBanner = ItemUtils.stringToItem(townBannerField.getValue());
+
+                    String townName = town.getName();
+                    this.loadAdvancement(Keys.TOWN, townBanner, townName);
+                }
+
+                if (town.hasNation()) {
+                    try {
+                        Nation nation = town.getNation();
+                        if (nation.hasMeta("banner")) {
+
+                            StringDataField nationBannerField = (StringDataField) nation.getMetadata("banner");
+                            ItemStack nationBanner = ItemUtils.stringToItem(nationBannerField.getValue());
+
+                            String nationName = nation.getName();
+                            this.loadAdvancement(Keys.NATION, nationBanner, nationName);
+                        }
+                    } catch (NotRegisteredException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
         }
     }
 
