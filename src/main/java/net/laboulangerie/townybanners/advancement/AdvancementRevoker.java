@@ -9,17 +9,17 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class AdvancementRevoker extends BukkitRunnable {
 
-    private String key;
+    private NamespacedKey key;
     private Player player;
 
-    public AdvancementRevoker(Player player, String key) {
+    public AdvancementRevoker(Player player, NamespacedKey key) {
         this.player = player;
         this.key = key;
     }
 
     @Override
     public void run() {
-        Advancement advancement = Bukkit.getAdvancement(NamespacedKey.minecraft(this.key));
+        Advancement advancement = Bukkit.getAdvancement(this.key);
         AdvancementProgress progress = this.player.getAdvancementProgress(advancement);
         if (progress.isDone()) {
             for (String criteria : progress.getAwardedCriteria()) {

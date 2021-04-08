@@ -7,8 +7,8 @@ import com.palmergames.bukkit.towny.object.Town;
 
 import net.laboulangerie.townybanners.TownyBanners;
 import net.laboulangerie.townybanners.advancement.AdvancementRevoker;
+import net.laboulangerie.townybanners.advancement.Keys;
 import org.bukkit.Bukkit;
-import org.bukkit.NamespacedKey;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.advancement.AdvancementProgress;
 import org.bukkit.entity.Player;
@@ -30,23 +30,23 @@ public class BannersListener implements Listener {
             Town town = event.getEnteredtown();
 
             if (town.hasMeta("banner")) {
-                grantAdvancement(player, "towny_banners_town_" + town.getName().toLowerCase());
-                revokeAdvancement(player, "towny_banners_town_" + town.getName().toLowerCase());
+                grantAdvancement(player, Keys.TOWN, town.getName());
+                revokeAdvancement(player, Keys.TOWN, town.getName());
             }
 
             if (town.hasNation()) {
                 if (town.getNation().hasMeta("banner")) {
                     Nation nation = town.getNation();
-                    grantAdvancement(player, "towny_banners_nation_" + nation.getName().toLowerCase());
-                    revokeAdvancement(player, "towny_banners_nation_" + nation.getName().toLowerCase());
+                    grantAdvancement(player, Keys.NATION, nation.getName());
+                    revokeAdvancement(player, Keys.NATION, nation.getName());
                 }
             }
         }
     }
 
-    public void grantAdvancement(Player player, String namespacedKey) {
+    public void grantAdvancement(Player player, Keys key, String name) {
 
-        Advancement advancement = Bukkit.getAdvancement(NamespacedKey.minecraft(namespacedKey));
+        Advancement advancement = Bukkit.getAdvancement(key.getKey(name));
         AdvancementProgress progress;
 
         progress = player.getAdvancementProgress(advancement);
@@ -59,8 +59,8 @@ public class BannersListener implements Listener {
 
     }
 
-    public void revokeAdvancement(Player player, String namespacedKey) {
-        AdvancementRevoker revoker = new AdvancementRevoker(player, namespacedKey);
+    public void revokeAdvancement(Player player, Keys key, String name) {
+        AdvancementRevoker revoker = new AdvancementRevoker(player, key.getKey(name));
         revoker.runTaskLater(this.townyBanners, 120);
     }
 }

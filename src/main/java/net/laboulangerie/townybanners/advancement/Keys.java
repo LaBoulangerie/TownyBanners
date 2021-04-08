@@ -16,7 +16,7 @@ public enum Keys {
     }
 
     public String getKeyString(String name) {
-        return this.keyPrefix+name;
+        return this.keyPrefix+name.toLowerCase();
     }
 
     public NamespacedKey getKey(String name) {
