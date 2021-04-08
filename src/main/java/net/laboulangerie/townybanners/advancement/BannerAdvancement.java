@@ -1,13 +1,20 @@
-package net.laboulangerie.townybanners;
+package net.laboulangerie.townybanners.advancement;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import net.laboulangerie.townybanners.TownyBanners;
 import net.minecraft.server.v1_16_R3.NBTTagCompound;
 import org.bukkit.craftbukkit.v1_16_R3.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
 public class BannerAdvancement {
+
+    private TownyBanners townyBanners;
+
+    public BannerAdvancement(TownyBanners townyBanners) {
+        this.townyBanners = townyBanners;
+    }
 
     public String getJsonAdvancement(String enteringMsg, ItemStack banner, String color) {
         JsonObject advancementJson = new JsonObject();

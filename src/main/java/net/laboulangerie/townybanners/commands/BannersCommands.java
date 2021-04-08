@@ -7,7 +7,7 @@ import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.metadata.StringDataField;
-import net.laboulangerie.townybanners.BannerAdvancement;
+import net.laboulangerie.townybanners.advancement.BannerAdvancement;
 import net.laboulangerie.townybanners.TownyBanners;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -58,7 +58,7 @@ public class BannersCommands implements CommandExecutor {
                             Bukkit.getServer().reloadData();
                         }
 
-                        Bukkit.getUnsafe().loadAdvancement(NamespacedKey.minecraft("towny_banners_town_" + town.getName().toLowerCase()), new BannerAdvancement().getJsonAdvancement(town.getName(), banner, "yellow"));
+                        Bukkit.getUnsafe().loadAdvancement(NamespacedKey.minecraft("towny_banners_town_" + town.getName().toLowerCase()), this.townyBanners.getBannerAdvancement().getJsonAdvancement(town.getName(), banner, "yellow"));
                         TownyMessaging.sendMsg(player, townyBanners.getConfig().getString("messages.command.townBannerSaved").replace("+townName", town.getName()));
 
                     } else {
@@ -97,7 +97,7 @@ public class BannersCommands implements CommandExecutor {
                                 Bukkit.getServer().reloadData();
                             }
 
-                            Bukkit.getUnsafe().loadAdvancement(NamespacedKey.minecraft("towny_banners_nation_" + nation.getName().toLowerCase()), new BannerAdvancement().getJsonAdvancement(nation.getName(), banner, "gold"));
+                            Bukkit.getUnsafe().loadAdvancement(NamespacedKey.minecraft("towny_banners_nation_" + nation.getName().toLowerCase()), this.townyBanners.getBannerAdvancement().getJsonAdvancement(nation.getName(), banner, "gold"));
                             TownyMessaging.sendMsg(player, townyBanners.getConfig().getString("messages.command.nationBannerSaved").replace("+nationName", nation.getName()));
 
                         } else {
