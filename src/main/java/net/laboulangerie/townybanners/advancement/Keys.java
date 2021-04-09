@@ -22,5 +22,4 @@ public enum Keys {
     public NamespacedKey getKey(String name) {
         return NamespacedKey.minecraft(this.getKeyString(name));
     }
-
 }

@@ -1,4 +1,4 @@
 package net.laboulangerie.townybanners.banner;
 
-public class TownBanner {
+public class TownBanner extends Banner {
 }

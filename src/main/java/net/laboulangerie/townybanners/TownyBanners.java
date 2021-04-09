@@ -54,7 +54,6 @@ public class TownyBanners extends JavaPlugin {
     @Override
     public void onDisable() {
         getServer().getConsoleSender().sendMessage(BANNER_TAG + "Bye!");
-
     }
 
     public Gson getGson() {
