@@ -59,7 +59,7 @@ public class TownBannerCommand implements CommandExecutor {
                     }
 
                     Bukkit.getUnsafe().loadAdvancement(townKey,
-                            this.townyBanners.getBannerAdvancement().getJsonAdvancement(town.getName(), banner, this.config.getTownColor()));
+                            this.townyBanners.getBannerAdvancement().getJsonAdvancement(this.config.enteringTown(town.getName()), banner, this.config.getTownColor()));
                     TownyMessaging.sendMsg(player, this.config.getTownBannerSaved(town.getName()));
 
                 } else {

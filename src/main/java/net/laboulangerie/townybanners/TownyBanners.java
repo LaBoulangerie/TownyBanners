@@ -10,6 +10,7 @@ import net.laboulangerie.townybanners.commands.TownBannerCommand;
 import net.laboulangerie.townybanners.commands.TownyBannersCommand;
 import net.laboulangerie.townybanners.listeners.BannersListener;
 import net.laboulangerie.townybanners.utils.TownyBannersConfig;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -30,7 +31,6 @@ public class TownyBanners extends JavaPlugin {
 
         this.gson = new GsonBuilder()
                 .setPrettyPrinting()
-                .serializeNulls()
                 .create();
 
         this.config = new TownyBannersConfig(this);
@@ -46,7 +46,7 @@ public class TownyBanners extends JavaPlugin {
 
         this.getServer().getPluginManager().registerEvents(new BannersListener(this), this);
 
-        this.bannerAdvancement.registerAdvancements();
+        Bukkit.getScheduler().runTaskLater(this, ()-> this.bannerAdvancement.registerAdvancements(), 20);
         this.getServer().getConsoleSender().sendMessage(BANNER_TAG + "Ready!");
 
     }

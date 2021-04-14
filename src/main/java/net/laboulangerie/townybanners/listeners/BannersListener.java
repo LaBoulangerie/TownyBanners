@@ -2,13 +2,13 @@ package net.laboulangerie.townybanners.listeners;
 
 import com.palmergames.bukkit.towny.event.PlayerEnterTownEvent;
 import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
-import com.palmergames.bukkit.towny.object.Government;
 import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Town;
 
 import net.laboulangerie.townybanners.TownyBanners;
 import net.laboulangerie.townybanners.advancement.AdvancementRevoker;
 import net.laboulangerie.townybanners.advancement.Keys;
+import net.laboulangerie.townybanners.banner.Banner;
 import org.bukkit.Bukkit;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.advancement.AdvancementProgress;
@@ -31,31 +31,35 @@ public class BannersListener implements Listener {
             Town town = event.getEnteredtown();
 
             if (town.hasMeta("banner")) {
-                grantAdvancement(player, Keys.TOWN, town.getName());
-                revokeAdvancement(player, Keys.TOWN, town.getName());
+                grantAdvancement(player, Keys.TOWN, town.getName().toLowerCase());
+                revokeAdvancement(player, Keys.TOWN, town.getName().toLowerCase());
             }
 
             if (town.hasNation()) {
                 if (town.getNation().hasMeta("banner")) {
                     Nation nation = town.getNation();
-                    grantAdvancement(player, Keys.NATION, nation.getName());
-                    revokeAdvancement(player, Keys.NATION, nation.getName());
+                    grantAdvancement(player, Keys.NATION, nation.getName().toLowerCase());
+                    revokeAdvancement(player, Keys.NATION, nation.getName().toLowerCase());
                 }
             }
         }
     }
 
+    public void grantAdvancement(Player player, Banner banner) {
+        this.grantAdvancement(player, banner.getKey(), banner.getGovernmentName());
+    }
+
+    public void revokeAdvancement(Player player, Banner banner) {
+        this.revokeAdvancement(player, banner.getKey(), banner.getGovernmentName());
+    }
+
     public void grantAdvancement(Player player, Keys key, String name) {
 
         Advancement advancement = Bukkit.getAdvancement(key.getKey(name));
-        AdvancementProgress progress;
 
-        progress = player.getAdvancementProgress(advancement);
-
-        if (!progress.isDone()) {
-            for (String criteria : progress.getRemainingCriteria()) {
-                progress.awardCriteria(criteria);
-            }
+        AdvancementProgress progress = player.getAdvancementProgress(advancement);
+        for (String criteria : progress.getRemainingCriteria()) {
+            progress.awardCriteria(criteria);
         }
 
     }

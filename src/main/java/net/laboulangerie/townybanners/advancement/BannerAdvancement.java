@@ -63,7 +63,21 @@ public class BannerAdvancement {
         return this.townyBanners.getGson().toJson(advancementJson);
     }
 
-    public void loadAdvancement(Keys type, ItemStack banner, String name) {
+    public void loadTownAdvancement(Keys type, ItemStack banner, String name) {
+        String lowerCase = name.toLowerCase();
+        try {
+            Bukkit.getUnsafe().removeAdvancement(type.getKey(lowerCase));
+            Bukkit.getServer().reloadData();
+            Bukkit.getUnsafe().loadAdvancement(type.getKey(lowerCase),
+                    this.getJsonAdvancement(this.config.enteringTown(name),
+                            banner, this.config.getNationColor()));
+            this.townyBanners.getServer().getConsoleSender().sendMessage(TownyBanners.BANNER_TAG + ChatColor.GREEN + "Advancement " + type.getKey(name) + " saved");
+        } catch (IllegalArgumentException e) {
+            this.townyBanners.getServer().getConsoleSender().sendMessage(TownyBanners.BANNER_TAG + ChatColor.DARK_RED + "Error while saving, Advancement " + type.getKey(name) + " seems to already exist");
+        }
+    }
+
+    public void loadNationAdvancement(Keys type, ItemStack banner, String name) {
         String lowerCase = name.toLowerCase();
         try {
             Bukkit.getUnsafe().removeAdvancement(type.getKey(lowerCase));
@@ -77,6 +91,7 @@ public class BannerAdvancement {
         }
     }
 
+
     public void registerAdvancements() {
         Collection<Town> towns = this.townyBanners.getTownyDataSource().getTowns();
         if (this.config.isPoppingOut()) {
@@ -88,7 +103,7 @@ public class BannerAdvancement {
                     ItemStack townBanner = ItemUtils.stringToItem(townBannerField.getValue());
 
                     String townName = town.getName();
-                    this.loadAdvancement(Keys.TOWN, townBanner, townName);
+                    this.loadTownAdvancement(Keys.TOWN, townBanner, townName);
                 }
 
                 if (town.hasNation()) {
@@ -100,7 +115,7 @@ public class BannerAdvancement {
                             ItemStack nationBanner = ItemUtils.stringToItem(nationBannerField.getValue());
 
                             String nationName = nation.getName();
-                            this.loadAdvancement(Keys.NATION, nationBanner, nationName);
+                            this.loadNationAdvancement(Keys.NATION, nationBanner, nationName);
                         }
                     } catch (NotRegisteredException e) {
                         e.printStackTrace();

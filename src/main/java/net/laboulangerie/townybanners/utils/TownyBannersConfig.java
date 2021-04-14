@@ -34,10 +34,10 @@ public class TownyBannersConfig {
         this.nationBannerSaved = configuration.getString("messages.command.nationBannerSaved");
         this.townDoesNotBelongToANation = configuration.getString("messages.command.townDoesNotBelongToANation");
 
-        this.town = configuration.getString("entering.town");
-        this.townColor = configuration.getString("entering.townColor");
-        this.nation = configuration.getString("entering.nation");
-        this.nationColor = configuration.getString("entering.nationColor");
+        this.town = configuration.getString("messages.entering.town");
+        this.townColor = configuration.getString("messages.entering.townColor");
+        this.nation = configuration.getString("messages.entering.nation");
+        this.nationColor = configuration.getString("messages.entering.nationColor");
     }
 
     public boolean isPoppingOut() {

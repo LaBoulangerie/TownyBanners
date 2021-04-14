@@ -2,6 +2,8 @@ package net.laboulangerie.townybanners.banner;
 
 import com.google.gson.JsonObject;
 import com.palmergames.bukkit.towny.object.Government;
+import com.palmergames.bukkit.towny.object.Nation;
+import com.palmergames.bukkit.towny.object.Town;
 import net.laboulangerie.townybanners.utils.Reflector;
 import org.bukkit.inventory.ItemStack;
 
@@ -37,14 +39,14 @@ public class BannerBuilder {
     }
 
 
-    public static Banner buildBanner(BannerType  type, Government government, ItemStack banner) {
+    public static Banner buildBanner(BannerType type, Government government, ItemStack banner, String enteringMessage, String color) {
         Banner b = null;
         switch (type) {
             case NATION_BANNER:
-                b = new NationBanner();
+                b = new NationBanner((Nation) government, banner, enteringMessage, color, buildJsonAdvancement(enteringMessage, banner, color));
                 break;
             case TOWN_BANNER:
-                b = new TownBanner();
+                b =  new TownBanner((Town) government, banner, enteringMessage, color, buildJsonAdvancement(enteringMessage, banner, color));;
                 break;
         }
         return b;
