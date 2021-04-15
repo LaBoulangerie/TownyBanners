@@ -1,101 +1,83 @@
 package net.laboulangerie.townybanners;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.palmergames.bukkit.towny.TownyAPI;
-import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
-import com.palmergames.bukkit.towny.object.Nation;
-import com.palmergames.bukkit.towny.object.Town;
-import com.palmergames.bukkit.towny.object.metadata.StringDataField;
-import net.laboulangerie.townybanners.commands.BannersCommands;
-import net.laboulangerie.townybanners.events.BannersEvents;
+import com.palmergames.bukkit.towny.db.TownyDataSource;
+import net.laboulangerie.townybanners.advancement.BannerAdvancement;
+import net.laboulangerie.townybanners.commands.NationBannerCommand;
+import net.laboulangerie.townybanners.commands.TownBannerCommand;
+import net.laboulangerie.townybanners.commands.TownyBannersCommand;
+import net.laboulangerie.townybanners.listeners.BannersListener;
+import net.laboulangerie.townybanners.utils.TownyBannersConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.NamespacedKey;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.Base64;
-import java.util.Collection;
-
 public class TownyBanners extends JavaPlugin {
-    public String townyBannersTag = ChatColor.GOLD + "[TownyBanners] ";
+
+    public final static String BANNER_TAG = ChatColor.GOLD + "[TownyBanners] ";
+
+    private TownyBannersConfig config;
+
+    private Gson gson;
+    private TownyAPI townyAPI;
+    private TownyDataSource townyDataSource;
+    private BannerAdvancement bannerAdvancement;
 
     @Override
     public void onEnable() {
         saveDefaultConfig();
 
-        BannersCommands commands = new BannersCommands(this);
+        this.gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .create();
 
-        getCommand("tbanner").setExecutor(commands);
-        getCommand("nbanner").setExecutor(commands);
-        getCommand("townybanners").setExecutor(commands);
+        this.config = new TownyBannersConfig(this);
 
+        this.townyAPI = TownyAPI.getInstance();
+        this.townyDataSource = this.townyAPI.getDataSource();
+        this.bannerAdvancement = new BannerAdvancement(this);
 
-        getServer().getPluginManager().registerEvents(new BannersEvents(this), this);
-        getServer().getConsoleSender().sendMessage(townyBannersTag + "Ready!");
-
-        Collection<Town> towns = TownyAPI.getInstance().getDataSource().getTowns();
-        if (this.getConfig().getBoolean("advancementPopUp")) {
-
-            for (Town town : towns) {
-
-                if (town.hasMeta("banner")) {
-                    StringDataField townBannerField = (StringDataField) town.getMetadata("banner");
-                    ItemStack townBanner = stringToItem(townBannerField.getValue());
-
-                    String townName = town.getName();
-                    String townAdvancementPrefix = "towny_banners_town_";
-
-                    try {
-                        Bukkit.getUnsafe().removeAdvancement(NamespacedKey.minecraft(townAdvancementPrefix + townName.toLowerCase()));
-                        Bukkit.getServer().reloadData();
-                        Bukkit.getUnsafe().loadAdvancement(NamespacedKey.minecraft(townAdvancementPrefix + townName.toLowerCase()),
-                                new BannerAdvancement().getJsonAdvancement(this.getConfig().getString("messages.entering.town")
-                                                .replace("+townName", townName),
-                                        townBanner, this.getConfig().getString("messages.entering.townColor")));
-                        getServer().getConsoleSender().sendMessage(townyBannersTag + ChatColor.GREEN + "Advancement " + townAdvancementPrefix + townName.toLowerCase() + " saved");
-                    } catch (IllegalArgumentException e) {
-                        getServer().getConsoleSender().sendMessage(townyBannersTag + ChatColor.DARK_RED + "Error while saving, Advancement " + townAdvancementPrefix + townName.toLowerCase() + " seems to already exist");
-                    }
-                }
+        this.getCommand("tbanner").setExecutor(new TownBannerCommand(this));
+        this.getCommand("nbanner").setExecutor(new NationBannerCommand(this));
+        this.getCommand("townybanners").setExecutor(new TownyBannersCommand(this));
 
 
-                if (town.hasNation()) {
-                    try {
-                        Nation nation = town.getNation();
-                        if (nation.hasMeta("banner")) {
+        this.getServer().getPluginManager().registerEvents(new BannersListener(this), this);
 
-                            StringDataField nationBannerField = (StringDataField) nation.getMetadata("banner");
-                            ItemStack nationBanner = stringToItem(nationBannerField.getValue());
+        Bukkit.getScheduler().runTaskLater(this, ()-> this.bannerAdvancement.registerAdvancements(), 20);
+        this.getServer().getConsoleSender().sendMessage(BANNER_TAG + "Ready!");
 
-                            String nationName = nation.getName();
-                            String nationAdvancementPrefix = "towny_banners_nation_";
-
-                            try {
-                                Bukkit.getUnsafe().removeAdvancement(NamespacedKey.minecraft(nationAdvancementPrefix + nationName.toLowerCase()));
-                                Bukkit.getServer().reloadData();
-                                Bukkit.getUnsafe().loadAdvancement(NamespacedKey.minecraft(nationAdvancementPrefix + nationName.toLowerCase()), new BannerAdvancement().getJsonAdvancement(this.getConfig().getString("messages.entering.nation").replace("+nationName", nationName), nationBanner, "gold"));
-                                getServer().getConsoleSender().sendMessage(townyBannersTag + ChatColor.GREEN + "Advancement " + nationAdvancementPrefix + nationName.toLowerCase() + " saved");
-                            } catch (IllegalArgumentException e) {
-                                getServer().getConsoleSender().sendMessage(townyBannersTag + ChatColor.DARK_RED + "Error while saving, Advancement " + nationAdvancementPrefix + nationName.toLowerCase() + " seems to already exist");
-                            }
-                        }
-                    } catch (NotRegisteredException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
     }
 
     @Override
     public void onDisable() {
-        getServer().getConsoleSender().sendMessage(townyBannersTag + "Bye!");
-
+        getServer().getConsoleSender().sendMessage(BANNER_TAG + "Bye!");
     }
 
+    public Gson getGson() {
+        return gson;
+    }
 
-    public ItemStack stringToItem(String string) {
-        byte[] decoded = Base64.getDecoder().decode(string);
-        return ItemStack.deserializeBytes(decoded);
+    public TownyAPI getTownyAPI() {
+        return townyAPI;
+    }
+
+    public TownyDataSource getTownyDataSource() {
+        return townyDataSource;
+    }
+
+    public BannerAdvancement getBannerAdvancement() {
+        return bannerAdvancement;
+    }
+
+    public TownyBannersConfig getTownyBannerConfig() {
+        return this.config;
+    }
+
+    public void reloadTownyBannerConfig() {
+        this.reloadConfig();
+        this.config = new TownyBannersConfig(this);
     }
 }

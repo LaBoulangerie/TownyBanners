@@ -28,5 +28,3 @@ messages:
     nation: "➽ +nationName"
     # see colors options
     nationColor: "gold"
-
-
