@@ -98,8 +98,8 @@ public class BannerAdvancement {
 
             for (Town town : towns) {
 
-                if (town.hasMeta("banner")) {
-                    StringDataField townBannerField = (StringDataField) town.getMetadata("banner");
+                if (town.hasMeta("townybanners_banner")) {
+                    StringDataField townBannerField = (StringDataField) town.getMetadata("townybanners_banner");
                     ItemStack townBanner = ItemUtils.stringToItem(townBannerField.getValue());
 
                     String townName = town.getName();
@@ -109,9 +109,9 @@ public class BannerAdvancement {
                 if (town.hasNation()) {
                     try {
                         Nation nation = town.getNation();
-                        if (nation.hasMeta("banner")) {
+                        if (nation.hasMeta("townybanners_banner")) {
 
-                            StringDataField nationBannerField = (StringDataField) nation.getMetadata("banner");
+                            StringDataField nationBannerField = (StringDataField) nation.getMetadata("townybanners_banner");
                             ItemStack nationBanner = ItemUtils.stringToItem(nationBannerField.getValue());
 
                             String nationName = nation.getName();

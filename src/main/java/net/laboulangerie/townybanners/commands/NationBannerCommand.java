@@ -8,6 +8,7 @@ import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.metadata.StringDataField;
 import net.laboulangerie.townybanners.TownyBanners;
 import net.laboulangerie.townybanners.advancement.Keys;
+import net.laboulangerie.townybanners.utils.CooldownUtils;
 import net.laboulangerie.townybanners.utils.ItemUtils;
 import net.laboulangerie.townybanners.utils.TownyBannersConfig;
 import org.bukkit.Bukkit;
@@ -48,25 +49,30 @@ public class NationBannerCommand implements CommandExecutor {
                 banner.setItemMeta(bannerM);
 
                 String serializedBanner = ItemUtils.itemToString(banner);
-                StringDataField bannerField = new StringDataField("banner", serializedBanner);
+                StringDataField bannerField = new StringDataField("townybanners_banner", serializedBanner);
+
                 try {
                     Resident resident = this.townyBanners.getTownyDataSource().getResident(player.getName());
                     if (resident.hasTown()) {
                         Town town = resident.getTown();
                         if (town.hasNation()) {
                             Nation nation = town.getNation();
-                            String nationName = nation.getName().toLowerCase();
-                            nation.addMetaData(bannerField);
-                            NamespacedKey nationKey = Keys.NATION.getKey(nationName);
-                            if (Bukkit.getAdvancement(nationKey) != null) {
-                                Bukkit.getUnsafe().removeAdvancement(nationKey);
-                                Bukkit.getServer().reloadData();
+                            if (!(nation.hasMeta("townybanners_timestamp")) || CooldownUtils.getNationTimestamp(nation) + config.getNationCooldown() < CooldownUtils.getCurrentTime()) {
+
+                                CooldownUtils.setNationTimestamp(nation);
+                                nation.addMetaData(bannerField);
+                                NamespacedKey nationKey = Keys.NATION.getKey(nation.getName().toLowerCase());
+                                if (Bukkit.getAdvancement(nationKey) != null) {
+                                    Bukkit.getUnsafe().removeAdvancement(nationKey);
+                                    Bukkit.getServer().reloadData();
+                                }
+
+                                Bukkit.getUnsafe().loadAdvancement(nationKey,
+                                    this.townyBanners.getBannerAdvancement().getJsonAdvancement(nation.getName(), banner, this.config.getNationColor()));
+                                TownyMessaging.sendMsg(player, this.config.getNationBannerSaved(nation.getName()));
+                            } else {
+                                TownyMessaging.sendErrorMsg(player, this.config.getNationInCooldown((CooldownUtils.getNationTimestamp(nation) + config.getNationCooldown()) - CooldownUtils.getCurrentTime()));
                             }
-
-                            Bukkit.getUnsafe().loadAdvancement(nationKey,
-                                    this.townyBanners.getBannerAdvancement().getJsonAdvancement(nation.getName(), banner, "gold"));
-                            TownyMessaging.sendMsg(player, this.config.getNationBannerSaved(nation.getName()));
-
                         } else {
                             TownyMessaging.sendErrorMsg(player, this.config.getTownDoesNotBelongToANation());
                         }

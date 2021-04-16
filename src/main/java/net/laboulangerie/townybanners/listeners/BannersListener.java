@@ -30,13 +30,13 @@ public class BannersListener implements Listener {
             Player player = event.getPlayer();
             Town town = event.getEnteredtown();
 
-            if (town.hasMeta("banner")) {
+            if (town.hasMeta("townybanners_banner")) {
                 grantAdvancement(player, Keys.TOWN, town.getName().toLowerCase());
                 revokeAdvancement(player, Keys.TOWN, town.getName().toLowerCase());
             }
 
             if (town.hasNation()) {
-                if (town.getNation().hasMeta("banner")) {
+                if (town.getNation().hasMeta("townybanners_banner")) {
                     Nation nation = town.getNation();
                     grantAdvancement(player, Keys.NATION, nation.getName().toLowerCase());
                     revokeAdvancement(player, Keys.NATION, nation.getName().toLowerCase());
