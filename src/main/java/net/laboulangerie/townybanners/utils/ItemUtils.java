@@ -15,6 +15,4 @@ public class ItemUtils {
         byte[] decoded = Base64.getDecoder().decode(string);
         return ItemStack.deserializeBytes(decoded);
     }
-
-
 }

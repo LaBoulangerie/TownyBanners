@@ -43,7 +43,7 @@ public class TownyBannersCommand implements CommandExecutor {
                 manager.disablePlugin(this.townyBanners);
                 this.townyBanners.reloadTownyBannerConfig();
                 manager.enablePlugin(this.townyBanners);
-                TownyMessaging.sendMsg(player, "Towny Banners config has been reloaded!");
+                TownyMessaging.sendMsg(player, "TownyBanners config has been reloaded!");
                 return true;
             }
             return false;

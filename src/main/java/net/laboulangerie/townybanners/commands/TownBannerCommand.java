@@ -7,6 +7,7 @@ import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.metadata.StringDataField;
 import net.laboulangerie.townybanners.TownyBanners;
 import net.laboulangerie.townybanners.advancement.Keys;
+import net.laboulangerie.townybanners.utils.CooldownUtils;
 import net.laboulangerie.townybanners.utils.ItemUtils;
 import net.laboulangerie.townybanners.utils.TownyBannersConfig;
 import org.bukkit.Bukkit;
@@ -46,22 +47,27 @@ public class TownBannerCommand implements CommandExecutor {
 
             String serializedBanner = ItemUtils.itemToString(banner);
 
-            StringDataField bannerField = new StringDataField("banner", serializedBanner);
+            StringDataField bannerField = new StringDataField("townybanners_banner", serializedBanner);
             try {
                 Resident resident = this.townyBanners.getTownyDataSource().getResident(player.getName());
                 if (resident.hasTown()) {
                     Town town = resident.getTown();
-                    town.addMetaData(bannerField);
-                    NamespacedKey townKey = Keys.TOWN.getKey(town.getName().toLowerCase());
-                    if (Bukkit.getAdvancement(townKey) != null) {
-                        Bukkit.getUnsafe().removeAdvancement(townKey);
-                        Bukkit.getServer().reloadData();
+                    if (!(town.hasMeta("townybanners_timestamp")) || CooldownUtils.getTownTimestamp(town) + config.getTownCooldown() < CooldownUtils.getCurrentTime()) {
+
+                        CooldownUtils.setTownTimestamp(town);
+                        town.addMetaData(bannerField);
+                        NamespacedKey townKey = Keys.TOWN.getKey(town.getName().toLowerCase());
+                        if (Bukkit.getAdvancement(townKey) != null) {
+                            Bukkit.getUnsafe().removeAdvancement(townKey);
+                            Bukkit.getServer().reloadData();
+                        }
+                        Bukkit.getUnsafe().loadAdvancement(townKey,
+                                this.townyBanners.getBannerAdvancement().getJsonAdvancement(this.config.enteringTown(town.getName()), banner, this.config.getTownColor()));
+
+                        TownyMessaging.sendMsg(player, this.config.getTownBannerSaved(town.getName()));
+                    } else {
+                        TownyMessaging.sendErrorMsg(player, this.config.getTownInCooldown((CooldownUtils.getTownTimestamp(town) + config.getTownCooldown()) - CooldownUtils.getCurrentTime() ));
                     }
-
-                    Bukkit.getUnsafe().loadAdvancement(townKey,
-                            this.townyBanners.getBannerAdvancement().getJsonAdvancement(this.config.enteringTown(town.getName()), banner, this.config.getTownColor()));
-                    TownyMessaging.sendMsg(player, this.config.getTownBannerSaved(town.getName()));
-
                 } else {
                     TownyMessaging.sendErrorMsg(player, this.config.getPlayerDoesNotBelongToATown());
                 }
