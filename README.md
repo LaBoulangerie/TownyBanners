@@ -18,4 +18,3 @@ You can add these permissions in the townyperms.yml file of the town/nation rank
 
 * Admin commands to set/unset banner in a specific town/nation
 * Dynmap integration to display the banner of towns/nations
-* Cooldown for setting a banner
