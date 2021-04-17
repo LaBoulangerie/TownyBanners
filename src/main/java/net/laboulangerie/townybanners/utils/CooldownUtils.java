@@ -11,18 +11,24 @@ public class CooldownUtils {
         return (System.currentTimeMillis());
     }
 
-    public static String getHumanReadableTime(long millis, String days, String hours, String minutes, String seconds) {
-        long timeDays = TimeUnit.MILLISECONDS.toDays(millis) / 1000;
+    private static String niceTime(long time, String plural, String singular) {
+        return time != 0 ? time > 1 ? String.valueOf(time) + plural + ", " : String.valueOf(time) + singular + ", " : "";
+    }
+
+    public static String getHumanReadableTime(long millis, String days, String day, String hours, String hour, String minutes, String minute, String seconds, String second) {
+
+
+        long timeDays = (TimeUnit.MILLISECONDS.toDays(millis) / 1000);
         long timeHours = TimeUnit.MILLISECONDS.toHours(millis) - TimeUnit.DAYS.toHours(TimeUnit.MILLISECONDS.toDays(millis));
         long timeMinutes = TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis));
         long timeSeconds = TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis));
 
-        return String.format("%d %s, %d %s, %d %s, %d %s",
-                timeDays, days,
-                timeHours, hours,
-                timeMinutes, minutes,
-                timeSeconds, seconds
-                );
+        String niceDays = niceTime(timeDays, days, day);
+        String niceHours = niceTime(timeHours, hours, hour);
+        String niceMinutes = niceTime(timeMinutes, minutes, minute);
+        String niceSeconds = niceTime(timeSeconds, seconds, second);
+
+        return niceDays + niceHours + niceMinutes + niceSeconds;
     }
 
     public static void setTownTimestamp(Town town) {

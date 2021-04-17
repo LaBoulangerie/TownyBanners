@@ -9,6 +9,7 @@ import net.laboulangerie.townybanners.TownyBanners;
 import net.laboulangerie.townybanners.advancement.AdvancementRevoker;
 import net.laboulangerie.townybanners.advancement.Keys;
 import net.laboulangerie.townybanners.banner.Banner;
+import net.laboulangerie.townybanners.utils.TownyBannersConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.advancement.AdvancementProgress;
@@ -17,15 +18,17 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 public class BannersListener implements Listener {
+
     private TownyBanners townyBanners;
+    private TownyBannersConfig config;
 
     public BannersListener(TownyBanners townyBanners) {
         this.townyBanners = townyBanners;
+        this.config = townyBanners.getTownyBannerConfig();
     }
-
     @EventHandler
     public void onTownEntering(PlayerEnterTownEvent event) throws NotRegisteredException {
-        if (townyBanners.getConfig().getBoolean("advancementPopUp")) {
+        if (this.config.isPoppingOut()) {
 
             Player player = event.getPlayer();
             Town town = event.getEnteredtown();

@@ -7,112 +7,127 @@ public class TownyBannersConfig {
 
     private TownyBanners townyBanners;
 
-    private boolean showPopup;
+    private boolean popup;
 
-    private long townCooldown;
-    private long nationCooldown;
+    private Long townCooldown;
+    private Long nationCooldown;
 
     private String days;
+    private String day;
     private String hours;
+    private String hour;
     private String minutes;
+    private String minute;
     private String seconds;
+    private String second;
 
     private String consoleTryCommand;
     private String townBannerSaved;
-    private String playerDoesNotBelongToATown;
-    private String playerHasNoBannerInHand;
+    private String playerNotInTown;
+    private String playerBannerNotInHand;
     private String nationBannerSaved;
-    private String townDoesNotBelongToANation;
+    private String townNotInNation;
+    private String playerPermsMissing;
     private String townInCooldown;
     private String nationInCooldown;
 
-    private String town;
-    private String townColor;
-    private String nation;
-    private String nationColor;
+    private String enteringTown;
+    private String enteringTownColor;
+    private String enteringNation;
+    private String enteringNationColor;
 
     public TownyBannersConfig(TownyBanners townyBanners) {
         this.townyBanners = townyBanners;
         FileConfiguration configuration = this.townyBanners.getConfig();
 
-        this.showPopup = configuration.getBoolean("advancementPopUp");
+        this.popup = configuration.getBoolean("popup");
 
-        this.townCooldown = configuration.getLong("townCooldown");
-        this.nationCooldown = configuration.getLong("nationCooldown");
+        this.townCooldown = configuration.getLong("town_cooldown");
+        this.nationCooldown = configuration.getLong("nation_cooldown");
 
-        this.days = configuration.getString("days");
-        this.hours = configuration.getString("hours");
-        this.minutes = configuration.getString("minutes");
-        this.seconds = configuration.getString("seconds");
+        this.days = configuration.getString("lang.days");
+        this.day = configuration.getString("lang.day");
+        this.hours = configuration.getString("lang.hours");
+        this.hour = configuration.getString("lang.hour");
+        this.minutes = configuration.getString("lang.minutes");
+        this.minute = configuration.getString("lang.minute");
+        this.seconds = configuration.getString("lang.seconds");
+        this.second = configuration.getString("lang.second");
 
-        this.consoleTryCommand = configuration.getString("messages.command.consoleTryCommand");
-        this.townBannerSaved = configuration.getString("messages.command.townBannerSaved");
-        this.playerDoesNotBelongToATown = configuration.getString("messages.command.playerDoesNotBelongToATown");
-        this.playerHasNoBannerInHand =  configuration.getString("messages.command.playerHasNoBannerInHand");
-        this.nationBannerSaved = configuration.getString("messages.command.nationBannerSaved");
-        this.townDoesNotBelongToANation = configuration.getString("messages.command.townDoesNotBelongToANation");
-        this.townInCooldown = configuration.getString("messages.command.townInCooldown");
-        this.nationInCooldown = configuration.getString("messages.command.nationInCooldown");
+        this.consoleTryCommand = configuration.getString("lang.console_try_command");
+        this.townBannerSaved = configuration.getString("lang.town_banner_saved");
+        this.playerNotInTown = configuration.getString("lang.player_not_in_town");
+        this.playerBannerNotInHand = configuration.getString("lang.player_banner_not_in_hand");
+        this.nationBannerSaved = configuration.getString("lang.nation_banner_saved");
+        this.townNotInNation = configuration.getString("lang.town_not_in_nation");
+        this.playerPermsMissing = configuration.getString("lang.player_perms_missing");
+        this.townInCooldown = configuration.getString("lang.town_in_cooldown");
+        this.nationInCooldown = configuration.getString("lang.nation_in_cooldown");
 
-        this.town = configuration.getString("messages.entering.town");
-        this.townColor = configuration.getString("messages.entering.townColor");
-        this.nation = configuration.getString("messages.entering.nation");
-        this.nationColor = configuration.getString("messages.entering.nationColor");
+        this.enteringTown = configuration.getString("lang.entering.town");
+        this.enteringTownColor = configuration.getString("lang.entering.town_color");
+        this.enteringNation = configuration.getString("lang.entering.nation");
+        this.enteringNationColor = configuration.getString("lang.entering.nation_color");
     }
 
     public boolean isPoppingOut() {
-        return showPopup;
+        return popup;
     }
 
-    public long getTownCooldown() { return townCooldown; }
+    public long getTownCooldown() {
+        return townCooldown;
+    }
 
-    public long getNationCooldown() { return nationCooldown; }
+    public long getNationCooldown() {
+        return nationCooldown;
+    }
 
     public String getConsoleTryCommand() {
         return consoleTryCommand;
     }
 
     public String getTownBannerSaved(String townName) {
-        return townBannerSaved.replace("%townName%", townName);
+        return townBannerSaved.replace("%town_name%", townName);
     }
 
-    public String getPlayerDoesNotBelongToATown() {
-        return playerDoesNotBelongToATown;
+    public String getPlayerNotInTown() {
+        return playerNotInTown;
     }
 
-    public String getPlayerHasNoBannerInHand() {
-        return playerHasNoBannerInHand;
+    public String getPlayerBannerNotInHand() {
+        return playerBannerNotInHand;
     }
 
     public String getNationBannerSaved(String nationName) {
-        return nationBannerSaved.replace("%nationName%", nationName);
+        return nationBannerSaved.replace("%nation_name%", nationName);
     }
 
-    public String getTownDoesNotBelongToANation() {
-        return townDoesNotBelongToANation;
+    public String getTownNotInNation() {
+        return townNotInNation;
+    }
+    
+    public String getTownInCooldown(Long cooldown) {
+        return townInCooldown.replace("%cooldown_left%", CooldownUtils.getHumanReadableTime(cooldown, days, day, hours, hour, minutes, minute, seconds, second));
     }
 
-    public String getTownInCooldown(long cooldown) {
-        return townInCooldown.replace("%cooldownLeft%", CooldownUtils.getHumanReadableTime(cooldown, days, hours, minutes, seconds));
+    public String getNationInCooldown(Long cooldown) {
+        return nationInCooldown.replace("%cooldown_left%", CooldownUtils.getHumanReadableTime(cooldown, days, day, hours, hour, minutes, minute, seconds, second));
     }
 
-    public String getNationInCooldown(long cooldown) {
-        return nationInCooldown.replace("%cooldownLeft%", CooldownUtils.getHumanReadableTime(cooldown, days, hours, minutes, seconds));
+    public String getEnteringTown(String townName) {
+        return enteringTown.replace("%town_name%", townName);
     }
 
-    public String enteringTown(String townName) {
-        return town.replace("%townName%", townName);
+    public String getEnteringTownColor() {
+        return enteringTownColor;
     }
 
-    public String getTownColor() {
-        return townColor;
+    public String getEnteringNation(String nationName) {
+        return enteringNation.replace("%nation_name%", nationName);
     }
 
-    public String enteringNation(String nationName) {
-        return nation.replace("%nationName%", nationName);
-    }
-
-    public String getNationColor() {
-        return nationColor;
+    public String getEnteringNationColor() {
+        return enteringNationColor;
     }
 }
+

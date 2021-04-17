@@ -68,23 +68,24 @@ public class NationBannerCommand implements CommandExecutor {
                                 }
 
                                 Bukkit.getUnsafe().loadAdvancement(nationKey,
-                                    this.townyBanners.getBannerAdvancement().getJsonAdvancement(nation.getName(), banner, this.config.getNationColor()));
+                                    this.townyBanners.getBannerAdvancement().getJsonAdvancement(this.config.getEnteringNation(nation.getName()), banner, this.config.getEnteringNationColor()));
+
                                 TownyMessaging.sendMsg(player, this.config.getNationBannerSaved(nation.getName()));
                             } else {
                                 TownyMessaging.sendErrorMsg(player, this.config.getNationInCooldown((CooldownUtils.getNationTimestamp(nation) + config.getNationCooldown()) - CooldownUtils.getCurrentTime()));
                             }
                         } else {
-                            TownyMessaging.sendErrorMsg(player, this.config.getTownDoesNotBelongToANation());
+                            TownyMessaging.sendErrorMsg(player, this.config.getTownNotInNation());
                         }
                     } else {
-                        TownyMessaging.sendErrorMsg(player, this.config.getPlayerDoesNotBelongToATown());
+                        TownyMessaging.sendErrorMsg(player, this.config.getPlayerNotInTown());
                     }
                 } catch (NotRegisteredException e) {
                     e.printStackTrace();
                 }
 
             } else {
-                TownyMessaging.sendErrorMsg(player, this.config.getPlayerHasNoBannerInHand());
+                TownyMessaging.sendErrorMsg(player, this.config.getPlayerBannerNotInHand());
             }
         }
         return true;

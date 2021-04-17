@@ -1,45 +1,50 @@
 # TownyBanners by PainOchoco and TheHunter365
-# Version: 1.0
+# Version: 1.1
 
 # whether or not display an advancement popup with the town and nation banners
 # when the player enter a town. (There is no other way to display the town/nation banner)
-advancementPopUp: true
+popup: true
 
 # cooldown in milliseconds between two /tbanner on the same town
-townCooldown: 10000 # 1 week
+town_cooldown: 604800000000 # 1 week in ms
 
 # cooldown in milliseconds between two /nbanner on the same nation
-nationCooldown: 604800000000 # 1 week
+nation_cooldown: 604800000000 # 1 week in ms
 
-# time units
-days: "jours"
-hours: "heures"
-minutes: "minutes"
-seconds: "secondes"
+lang:
+  # time units
+  days: "jours"
+  day: "jour"
+  hours: "heures"
+  hour: "heure"
+  minutes: "minutes"
+  minute: "minute"
+  seconds: "secondes"
+  second: "seconde"
 
-messages:
-  command:
-    consoleTryCommand: "Tu peux faire ça seulement en jeu !"
-    # +townName represents the town name
-    townBannerSaved: "Cette bannière a bien été enregistrée pour le village %townName% !"
-    playerDoesNotBelongToATown: "Vous devez être dans un village pour pouvoir définir la bannière de celui-ci."
-    playerHasNoBannerInHand: "Veuillez avoir une bannière dans la main principale pour l'enregistrer."
-    # +nationName represents the nation name
-    nationBannerSaved: "Cette bannière a bien été enregistrée pour la nation %nationName% !"
-    townDoesNotBelongToANation: "Votre village doit être dans une nation pour pouvoir définir la bannière de celle-ci."
-    townInCooldown: "Vous devez attendre %cooldownLeft% pour modifier la bannière de votre village."
-    nationInCooldown: "Vous devez attendre %cooldownLeft% pour modifier la bannière de votre nation."
+  console_try_command: "Tu peux faire ça seulement en jeu !"
+  # %town_name% represents the town name
+  town_banner_saved: "Cette bannière a bien été enregistrée pour le village %town_name% !"
+  player_not_in_town: "Vous devez être dans un village pour pouvoir définir la bannière de celui-ci."
+  player_banner_not_in_hand: "Veuillez avoir une bannière dans la main principale pour l'enregistrer."
+  # %nation_name% represents the town name
+  nation_banner_saved: "Cette bannière a bien été enregistrée pour la nation %nation_name% !"
+  town_not_in_nation: "Votre village doit être dans une nation pour pouvoir définir la bannière de celle-ci."
 
+  player_perms_missing: "Vous n'avez pas la permission de faire ça !"
+
+  # %cooldown_left% represents the time left to set a new banner
+  town_in_cooldown: "Vous devez attendre %cooldown_left% pour modifier la bannière de votre village."
+  nation_in_cooldown: "Vous devez attendre %cooldown_left% pour modifier la bannière de votre nation."
 
   entering:
-    # +townName represents the town name
-    town: "➜ %townName%"
+    town: "➜ %town_name%"
     # colors options: black, dark_blue, dark_green,
     # dark_aqua, dark_red, dark_purple, gold,
     # gray, dark_gray, blue, green, aqua,
     # red, light_purple, yellow, white.
-    townColor: "yellow"
-    # +nationName represents the town name
+    town_color: "yellow"
+
     nation: "➽ %nationName%"
     # see colors options
-    nationColor: "gold"
+    nation_color: "gold"
