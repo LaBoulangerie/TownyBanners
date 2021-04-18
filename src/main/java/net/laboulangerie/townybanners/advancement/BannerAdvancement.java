@@ -69,8 +69,8 @@ public class BannerAdvancement {
             Bukkit.getUnsafe().removeAdvancement(type.getKey(lowerCase));
             Bukkit.getServer().reloadData();
             Bukkit.getUnsafe().loadAdvancement(type.getKey(lowerCase),
-                    this.getJsonAdvancement(this.config.enteringTown(name),
-                            banner, this.config.getNationColor()));
+                    this.getJsonAdvancement(this.config.getEnteringTown(name),
+                            banner, this.config.getEnteringTownColor()));
             this.townyBanners.getServer().getConsoleSender().sendMessage(TownyBanners.BANNER_TAG + ChatColor.GREEN + "Advancement " + type.getKey(name) + " saved");
         } catch (IllegalArgumentException e) {
             this.townyBanners.getServer().getConsoleSender().sendMessage(TownyBanners.BANNER_TAG + ChatColor.DARK_RED + "Error while saving, Advancement " + type.getKey(name) + " seems to already exist");
@@ -83,8 +83,8 @@ public class BannerAdvancement {
             Bukkit.getUnsafe().removeAdvancement(type.getKey(lowerCase));
             Bukkit.getServer().reloadData();
             Bukkit.getUnsafe().loadAdvancement(type.getKey(lowerCase),
-                    this.getJsonAdvancement(this.config.enteringNation(name),
-                            banner, this.config.getNationColor()));
+                    this.getJsonAdvancement(this.config.getEnteringNation(name),
+                            banner, this.config.getEnteringNationColor()));
             this.townyBanners.getServer().getConsoleSender().sendMessage(TownyBanners.BANNER_TAG + ChatColor.GREEN + "Advancement " + type.getKey(name) + " saved");
         } catch (IllegalArgumentException e) {
             this.townyBanners.getServer().getConsoleSender().sendMessage(TownyBanners.BANNER_TAG + ChatColor.DARK_RED + "Error while saving, Advancement " + type.getKey(name) + " seems to already exist");

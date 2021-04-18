@@ -8,6 +8,7 @@ import net.laboulangerie.townybanners.advancement.BannerAdvancement;
 import net.laboulangerie.townybanners.commands.NationBannerCommand;
 import net.laboulangerie.townybanners.commands.TownBannerCommand;
 import net.laboulangerie.townybanners.commands.TownyBannersCommand;
+import net.laboulangerie.townybanners.commands.TownyBannersTab;
 import net.laboulangerie.townybanners.listeners.BannersListener;
 import net.laboulangerie.townybanners.utils.TownyBannersConfig;
 import org.bukkit.Bukkit;
@@ -42,7 +43,7 @@ public class TownyBanners extends JavaPlugin {
         this.getCommand("tbanner").setExecutor(new TownBannerCommand(this));
         this.getCommand("nbanner").setExecutor(new NationBannerCommand(this));
         this.getCommand("townybanners").setExecutor(new TownyBannersCommand(this));
-
+        this.getCommand("townybanners").setTabCompleter(new TownyBannersTab());
 
         this.getServer().getPluginManager().registerEvents(new BannersListener(this), this);
 
