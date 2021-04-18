@@ -12,7 +12,7 @@ public class CooldownUtils {
     }
 
     private static String niceTime(long time, String plural, String singular) {
-        return time != 0 ? time > 1 ? String.valueOf(time) + plural + ", " : String.valueOf(time) + singular + ", " : "";
+        return time != 0 ? time > 1 ? String.valueOf(time) + " " + plural + ", " : String.valueOf(time) + " " + singular + ", " : "";
     }
 
     public static String getHumanReadableTime(long millis, String days, String day, String hours, String hour, String minutes, String minute, String seconds, String second) {

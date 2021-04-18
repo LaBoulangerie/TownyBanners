@@ -39,8 +39,9 @@ public class TownyBannersTab implements TabCompleter {
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (subCommands.isEmpty()) {
             subCommands.add("reload");
-            subCommands.add("setbanner");
-            subCommands.add("unsetbanner");
+            subCommands.add("set");
+            subCommands.add("unset");
+            subCommands.add("give");
         }
 
         if (arguments.isEmpty()) {
@@ -57,7 +58,7 @@ public class TownyBannersTab implements TabCompleter {
             }
         }
 
-        if (args.length == 2) {
+        if (args.length == 2 && !args[0].equals("reload")) {
             for (String arg : arguments) {
                 if (arg.toLowerCase().startsWith(args[1].toLowerCase())) {
                     results.add(arg);
@@ -65,7 +66,7 @@ public class TownyBannersTab implements TabCompleter {
             }
         }
 
-        if (args.length == 3 && args[1].toLowerCase() == "town") {
+        if (args.length == 3 && args[1].toLowerCase().equals("town")) {
             for (String town : getTownsNames()) {
                 if (town.toLowerCase().startsWith(args[2].toLowerCase())) {
                     results.add(town);
@@ -73,7 +74,7 @@ public class TownyBannersTab implements TabCompleter {
             }
         }
 
-        if (args.length == 3 && args[1].toLowerCase() == "nation") {
+        if (args.length == 3 && args[1].toLowerCase().equals("nation")) {
             for (String nation : getNationNames()) {
                 if (nation.toLowerCase().startsWith(args[2].toLowerCase())) {
                     results.add(nation);

@@ -45,6 +45,6 @@ lang:
     # red, light_purple, yellow, white.
     town_color: "yellow"
 
-    nation: "➽ %nationName%"
+    nation: "➽ %nation_name%"
     # see colors options
     nation_color: "gold"

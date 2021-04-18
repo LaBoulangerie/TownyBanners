@@ -15,7 +15,7 @@ commands:
     usage: "/<command>"
   townybanners:
     description: Reload the Towny Banners config.
-    usage: "/<command> <reload>"
+    usage: "/<command> <reload|set|unset|give> [town|nation] [townName|nationName]"
 
 permissions:
   townybanners.town:
@@ -24,6 +24,12 @@ permissions:
   townybanners.nation:
     description: User is able to set a banner to his nation.
     default: op
-  townyflight.reload:
+  townybanners.reload:
     description: User is able to reload the config.
     default: op
+  townybanners.set:
+    description: User is able to set any town/nation banner.
+  townybanners.unset:
+    description: User is able to unset any town/nation banner.
+  townybanners.give:
+    description: User is able to give himself banners from any town and nation.
